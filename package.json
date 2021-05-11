@@ -1,0 +1,15 @@
+{
+  "name": "recharge-api",
+  "version": "1.0.0",
+  "description": "Recharge.finance api",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Oli Newman",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "web3": "^1.3.5"
+  }
+}
