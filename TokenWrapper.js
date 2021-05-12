@@ -1,6 +1,6 @@
 const Web3 = require('web3')
 
-class Contract {
+class TokenWrapper {
     
     constructor(contractAddress, contractAbi, provider, gatewayAddress, totalSupply) {
         this.provider = provider;
@@ -31,4 +31,4 @@ class Contract {
         };
 }
 
-module.exports = Contract
+module.exports = TokenWrapper
