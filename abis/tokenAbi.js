@@ -1,4 +1,4 @@
-const CONTRACT_ABI = [
+const r3fi_abi = [
     {"inputs": [], "stateMutability": "nonpayable", "type": "constructor"},
     {
         "anonymous": false,
@@ -186,4 +186,4 @@ const CONTRACT_ABI = [
         "type": "function"
     }];
 
-module.exports = CONTRACT_ABI;
+module.exports = r3fi_abi;
