@@ -6,7 +6,13 @@ module.exports = (app) => {
     app.route('/api/circulation/:chain').get(function (req, res) {
         recharge.getTokenCirculation(req.params.chain)
             .then(value => {
-                res.status(200).json(value)
+                res.status(200)
+                if (req.query.format === 'text') {
+                    res.setHeader('content-type', 'text/plain')
+                    res.send(value.toString());
+                } else {
+                    res.json(value);
+                };
             })
             .catch(Error => {
                 res.status(400).json(Error)
