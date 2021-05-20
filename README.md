@@ -4,7 +4,7 @@ Api for [r3charge.finance](https://recharge.finance/)
 
 __Endpoints:__
 
-`/api/circulation/{chain}` - Retrieves the amount of tokens in circulation on the specified chain (eth | bsc)
+`/api/circulation/{chain}` - Retrieves the amount of tokens in circulation on the specified chain (eth | bsc). Append `?format=text` to retrieve the circulation in plain-text format  
 
 __Requires:__
 
