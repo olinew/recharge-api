@@ -56,7 +56,6 @@ module.exports = TokenWrapper = (contractAddress, contractAbi, provider, avgBloc
                 "BlockNumber": stats.blockNo,
                 "TimeStamp": Date.now()
             })
-        console.debug(stats)
         });
         removeOldTransactions();
     }
