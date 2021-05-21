@@ -5,6 +5,9 @@ const GatewayAbi        = require('./abis/gatewayAbi.js')
 
 module.exports = StatsController = () => {
 
+    const ethBlocksHour = Math.round(6498 / 24);
+    const bscBlocksHour = Math.round(28000 / 24);
+
     const r3fiAddress       = '0x13572851103bed49ff743af4c4bb5ace88b22e2f';
     const ethProvider       = 'wss://mainnet.infura.io/ws/v3/4dd869b552454cc79348980651f943dd';
     const ethGatewayAddress = '0x8929323F68D5Ed0D9Eb8E13b3670E7A7669355c6';
@@ -15,8 +18,8 @@ module.exports = StatsController = () => {
 
     const totalSupply       = 5000000;
 
-    let r3fi                = TokenWrapper(r3fiAddress, TokenAbi, ethProvider, ethGatewayAddress);
-    let br3fi               = TokenWrapper(bR3fiAddress, TokenAbi, bscProvider, bscGatewayAddress);
+    let r3fi                = TokenWrapper(r3fiAddress, TokenAbi, ethProvider, ethBlocksHour);
+    let br3fi               = TokenWrapper(bR3fiAddress, TokenAbi, bscProvider, bscBlocksHour);
 
     let r3fi_gateway        = GatewayWrapper(ethGatewayAddress, GatewayAbi, ethProvider, totalSupply);
     let bR3fi_gateway       = GatewayWrapper(bscGatewayAddress, GatewayAbi, bscProvider, totalSupply);
@@ -28,7 +31,14 @@ module.exports = StatsController = () => {
         return new Promise((resolve, reject) => { reject("Invalid chain selector"); }); 
     };
 
+    const GetTokenTransactions = (Chain) => {
+        if (Chain.toUpperCase() === 'BSC'){ return br3fi.getTransactionStats(); }
+        if (Chain.toUpperCase() === 'ETH'){ return r3fi.getTransactionStats(); }
+        return new Promise((resolve, reject) => { reject("Invalid chain selector"); }); 
+    }
+
     return {
-        getTokenCirculation: getTokenCirculation
+        getTokenCirculation: getTokenCirculation,
+        GetTokenTransactions: GetTokenTransactions
     };
 };
