@@ -1,6 +1,6 @@
-const Web3  = require('web3');
+const Web3 = require('web3');
 
-module.exports = TokenWrapper = (contractAddress, contractAbi, provider, avgBlocksHour) => {
+module.exports = TokenWrapper = (contractAddress, contractAbi, provider, blocksHour) => {
     
     const createW3Instance = () => {
         return new Web3(provider);
@@ -14,27 +14,27 @@ module.exports = TokenWrapper = (contractAddress, contractAbi, provider, avgBloc
     
     let contract = createContractInstance();
 
-    let transactionRecords = [];
-    let blocksHour = avgBlocksHour;
+    let transaction_records = [];
+    let blocks_hour = blocksHour;
 
     // Gets rid of any transaction records that are over a day old
     const removeOldTransactions = () => {
-        if (transactionRecords.length == 0){ return }
-        while (transactionRecords[0].TimeStamp - transactionRecords[transactionRecords.length-1] > 86400000) { // 86400000 = 24 hours in ms
-            transactionRecords.shift();
+        if (transaction_records.length == 0){ return }
+        while (transaction_records[0].TimeStamp - transaction_records[transaction_records.length-1] > 86400000) { // 86400000 = 24 hours in ms
+            transaction_records.shift();
         }
     }
 
-    const getLatestTransactionStats = (blocksHour) => {
+    const getLatestTransactionStats = (blocks_hour) => {
         new Promise(resolve => {
             web3.eth.getBlockNumber().then(blockNo => {
                 let fromBlock = 0;
-                if (transactionRecords.length > 0) { 
+                if (transaction_records.length > 0) { 
                 // We already have some transfer data, want transfers since the last block we checked
-                    fromBlock = transactionRecords[(transactionRecords.length-1)].BlockNumber;
+                    fromBlock = transaction_records[(transaction_records.length-1)].BlockNumber;
                 } else {
                 // We have no transfers, we want all blocks for aprox. the past hour
-                    fromBlock = blockNo - blocksHour;
+                    fromBlock = blockNo - blocks_hour;
                 }
                 contract.getPastEvents("Transfer", {
                     fromBlock: fromBlock
@@ -50,7 +50,7 @@ module.exports = TokenWrapper = (contractAddress, contractAbi, provider, avgBloc
                 });
             });
         }).then(stats => {
-            transactionRecords.push({
+            transaction_records.push({
                 "Total": stats.total/1e9,
                 "Fees": stats.fees/1e9,
                 "BlockNumber": stats.blockNo,
@@ -61,14 +61,14 @@ module.exports = TokenWrapper = (contractAddress, contractAbi, provider, avgBloc
     }
 
     // Run the getLatestTransactionStats for the past hour of blocks, every hour from init. 3.6*1e6
-    getLatestTransactionStats(blocksHour);
-    setInterval(() => getLatestTransactionStats(blocksHour), 1.3*1e6)
+    getLatestTransactionStats(blocks_hour);
+    setInterval(() => getLatestTransactionStats(blocks_hour), 1.3*1e6)
 
     const getTransactionStats = () => {
         getLatestTransactionStats(blocksHour);
         let totalTransacted = 0;
         let totalFees = 0;
-        transactionRecords.forEach(record => {
+        transaction_records.forEach(record => {
             totalTransacted += record.Total;
             totalFees += record.Fees
         });
