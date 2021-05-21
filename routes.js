@@ -18,4 +18,13 @@ module.exports = (app) => {
                 res.status(400).json(Error)
             });
     });
+
+    app.route('/api/transactions/:chain').get(function (req, res) {
+        if (req.query.format === 'text') {
+            res.setHeader('content-type', 'text/plain')
+            res.send(recharge.GetTokenTransactions(req.params.chain));
+        } else {
+            res.json(recharge.GetTokenTransactions(req.params.chain));
+        };
+    });
 };
