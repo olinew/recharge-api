@@ -3,7 +3,7 @@ module.exports = (app) => {
     const StatsController = require('./StatsController.js');
     const recharge = StatsController();
 
-    app.route('/api/circulation/:chain').get(function (req, res) {
+    app.route('/circulation/:chain').get(function (req, res) {
         recharge.getTokenCirculation(req.params.chain)
             .then(value => {
                 res.status(200)
@@ -19,7 +19,7 @@ module.exports = (app) => {
             });
     });
 
-    app.route('/api/transactions/:chain').get(function (req, res) {
+    app.route('/transactions/:chain').get(function (req, res) {
         if (req.query.format === 'text') {
             res.setHeader('content-type', 'text/plain')
             res.send(recharge.GetTokenTransactions(req.params.chain));

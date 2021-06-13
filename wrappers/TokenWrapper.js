@@ -26,7 +26,7 @@ module.exports = TokenWrapper = (contractAddress, contractAbi, provider, blocksH
     }
 
     const getLatestTransactionStats = (blocks_hour) => {
-        new Promise(resolve => {
+        new Promise((resolve, reject) => {
             web3.eth.getBlockNumber().then(blockNo => {
                 let fromBlock = 0;
                 if (transaction_records.length > 0) { 
@@ -47,6 +47,8 @@ module.exports = TokenWrapper = (contractAddress, contractAbi, provider, blocksH
 
                     let fees = total / 100 * 5;
                     resolve({total, fees, blockNo});
+                }).catch( Error => {
+                    reject(Error);
                 });
             });
         }).then(stats => {
